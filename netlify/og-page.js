@@ -3,7 +3,8 @@ const imageURL = function(data) {
   if(data.original_og) {
     return `${data.original_og}`;
   } else {
-    return `${data.domain}/image${data.path}.png`;
+    // Ưu tiên .jpg, nếu không có sẽ dùng .png
+    return `${data.domain}/image${data.path}.jpg`;
   }
 };
 
