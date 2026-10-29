@@ -47,12 +47,16 @@ export default async (request: Request, context: Context) => {
     // do we have a custom image?
     // no image? Pass the request on. 
     // Twitter downgrades YouTube URLs to small cards, so let's offer 
-    // a large card even if we don't have a custom OG image of our own
-    const image = await fetch(`${rootDomain}/image${url.pathname}.png`);
-    if((image.status == 404) && (site !== "YouTube")) {
-      context.log(`No custom image for ${url.pathname}`);
-      return;
-    }
+    // a large card even if we don't have a custom OG image of our // Thử tìm .png trước, nếu không có thì thử .jpg
+let image = await fetch(`${rootDomain}/image${url.pathname}.png`);
+if (image.status === 404) {
+  image = await fetch(`${rootDomain}/image${url.pathname}.jpg`);
+}
+
+if ((image.status === 404) && (site !== "YouTube")) {
+  context.log(`No custom image for ${url.pathname}`);
+  return;
+}
     
     // Populate our OG page template
     // and return it as HTML
